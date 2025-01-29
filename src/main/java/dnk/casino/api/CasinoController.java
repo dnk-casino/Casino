@@ -49,7 +49,7 @@ public class CasinoController {
         return "restablecer-contrasena";
     }
 
-    @PostMapping(value = "/coins", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/api/coins", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Integer> getCoins(@RequestHeader("Authorization") String token) {
         Optional<String> usernameOpt = JwtTokenUtil.extractUsernameFromToken(token);
@@ -65,7 +65,7 @@ public class CasinoController {
         }
     }
 
-    @PutMapping("/coins")
+    @PutMapping("/api/coins")
     @ResponseBody
     public ResponseEntity<Integer> updateCoins(@RequestHeader("Authorization") String token,
             @RequestBody CoinUpdateRequest request) {
