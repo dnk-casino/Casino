@@ -5,15 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import dnk.casino.Users.Usuario;
-import dnk.casino.Users.UsuarioRepository;
 
 @Service
 public class RuletaService {
     @Autowired
     private RuletaRepository ruletaRepository;
-
-    @Autowired
-    private UsuarioRepository usuarioRepository;
 
     public Ruleta crearRuleta() {
         Ruleta ruleta = new Ruleta();
@@ -25,17 +21,16 @@ public class RuletaService {
         return ruletaRepository.findById(id).orElse(null);
     }
 
-    public Ruleta apostar(String ruletaId, String apostadorId, Apuesta apuesta) {
-        Usuario usuario = usuarioRepository.findById(apostadorId).orElse(null);
+    public Ruleta apostar(String ruletaId, Usuario usuario, Apuesta apuesta) {
         Ruleta ruleta = obtenerRuleta(ruletaId);
         if (ruleta != null && ruleta.isRuletaAbierta()) {
             Apostador apostador = ruleta.getApostadores().stream()
-                    .filter(a -> a.getId().equals(apostadorId))
+                    .filter(a -> a.getId().equals(usuario.getId()))
                     .findFirst()
                     .orElse(null);
             if (apostador == null) {
                 if (usuario != null) {
-                    apostador = new Apostador(apostadorId, usuario.getUsername(), ruletaId);
+                    apostador = new Apostador(usuario.getId(), usuario.getUsername(), ruletaId);
                 }
             } else {
                 ruleta.getApostadores().remove(apostador);
