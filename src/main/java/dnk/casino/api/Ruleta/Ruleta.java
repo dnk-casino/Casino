@@ -52,4 +52,12 @@ public class Ruleta {
     public void setRuletaAbierta(boolean ruletaAbierta) {
         this.ruletaAbierta = ruletaAbierta;
     }
+
+    public void addApostador(Apostador apostador) {
+        this.apostadores.add(apostador);
+    }
+
+    public void eliminarApostador(Apostador apostador) {
+        this.apostadores.remove(apostador);
+    }
 }

@@ -29,9 +29,13 @@ public class RuletaController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Ruleta> getRuletaById(@PathVariable String id) {
-        Ruleta ruleta = ruletaService.obtenerRuleta(id);
-        return new ResponseEntity<>(ruleta, HttpStatus.OK);
+    public ResponseEntity<?> getRuletaById(@PathVariable String id) {
+        Optional<Ruleta> ruletaOpt = ruletaService.findById(id);
+        if (ruletaOpt.isPresent()) {
+            return new ResponseEntity<>(ruletaOpt.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Ruleta no encontrada", HttpStatus.NOT_FOUND);
+        }
     }
 
     @PostMapping
@@ -48,12 +52,22 @@ public class RuletaController {
         if (usernameOpt.isPresent()) {
             Optional<Usuario> usuarioOpt = usuarioService.findByUsername(usernameOpt.get());
             if (usuarioOpt.isPresent()) {
-                try {
-                    Ruleta result = ruletaService.apostar(id, usuarioOpt.get(), apuesta);
-                    return ResponseEntity.ok(result);
-                } catch (Exception e) {
-                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                            .body("Error al apostar: " + e.getMessage());
+                Optional<Ruleta> ruletaOpt = ruletaService.findById(id);
+                if (ruletaOpt.isPresent()) {
+                    Ruleta ruleta = ruletaOpt.get();
+                    if (ruleta.isRuletaAbierta()) {
+                        try {
+                            Ruleta result = ruletaService.apostar(ruleta, usuarioOpt.get(), apuesta);
+                            return ResponseEntity.ok(result);
+                        } catch (Exception e) {
+                            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                    .body("Error al apostar: " + e.getMessage());
+                        }
+                    } else {
+                        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Ruleta cerrada");
+                    }
+                } else {
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Ruleta no encontrada");
                 }
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");
