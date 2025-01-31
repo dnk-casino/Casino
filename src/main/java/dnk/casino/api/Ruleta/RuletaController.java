@@ -83,11 +83,15 @@ public class RuletaController {
     }
 
     @GetMapping("/reglas")
-    public ResponseEntity<Resource> getReglasPDF() throws Exception {
-        Path path = Paths.get("src/main/resources/static/reglas-ruleta-americana.pdf");
-        Resource resource = new UrlResource(path.toUri());
-        return ResponseEntity.ok()
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(resource);
+    public ResponseEntity<?> getReglasPDF() throws Exception {
+        try {
+            Path path = Paths.get("src/main/resources/static/reglas-ruleta-americana.pdf");
+            Resource resource = new UrlResource(path.toUri());
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(resource);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Fichero no encontrado");
+        }
     }
 }
