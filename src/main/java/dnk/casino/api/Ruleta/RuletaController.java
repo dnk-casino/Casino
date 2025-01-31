@@ -1,10 +1,15 @@
 package dnk.casino.api.Ruleta;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -75,5 +80,14 @@ public class RuletaController {
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token inválido");
         }
+    }
+
+    @GetMapping("/reglas")
+    public ResponseEntity<Resource> getReglasPDF() throws Exception {
+        Path path = Paths.get("src/main/resources/static/reglas-ruleta-americana.pdf");
+        Resource resource = new UrlResource(path.toUri());
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(resource);
     }
 }
