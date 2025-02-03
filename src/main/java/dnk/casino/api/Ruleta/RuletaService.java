@@ -44,13 +44,19 @@ public class RuletaService {
     }
 
     public Ruleta girarRuleta(Ruleta ruleta) {
-        int numeroGanador = (int) (Math.random() * 36);
-        ruleta.setNumeroGanador(numeroGanador);
+        ruleta.girar();
         return ruletaRepository.save(ruleta);
+    }
 
+    public List<Object[]> obtenerGanadores(Ruleta ruleta) {
+        return ruleta.determinarGanadores();
     }
 
     public List<Ruleta> getAllRuletas() {
         return ruletaRepository.findAll();
+    }
+
+    public List<Ruleta> getAllRuletasAbiertas(boolean abiertas) {
+        return ruletaRepository.findByRuletaAbierta(abiertas);
     }
 }

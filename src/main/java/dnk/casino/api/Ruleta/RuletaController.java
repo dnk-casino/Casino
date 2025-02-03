@@ -27,9 +27,28 @@ public class RuletaController {
     @Autowired
     private UsuarioService usuarioService;
 
+    @GetMapping("/reglas")
+    public ResponseEntity<?> getReglasPDF() throws Exception {
+        try {
+            Path path = Paths.get("src/main/resources/static/reglas-ruleta-americana.pdf");
+            Resource resource = new UrlResource(path.toUri());
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(resource);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Fichero no encontrado");
+        }
+    }
+
     @GetMapping
     public ResponseEntity<List<Ruleta>> getAllRuletas() {
         List<Ruleta> ruletas = ruletaService.getAllRuletas();
+        return new ResponseEntity<>(ruletas, HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Ruleta>> getAllRuletasAbiertas() {
+        List<Ruleta> ruletas = ruletaService.getAllRuletasAbiertas(true);
         return new ResponseEntity<>(ruletas, HttpStatus.OK);
     }
 
@@ -44,16 +63,14 @@ public class RuletaController {
     }
 
     @PostMapping
-    public ResponseEntity<Ruleta> crearRuleta(@RequestBody Ruleta ruleta) {
-        Ruleta newRuleta = ruletaService.crearRuleta();
-        return new ResponseEntity<>(newRuleta, HttpStatus.CREATED);
+    public ResponseEntity<Ruleta> crearRuleta() {
+        return new ResponseEntity<>(ruletaService.crearRuleta(), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> apostar(@RequestHeader("Authorization") String token, @PathVariable String id,
             @RequestBody Apuesta apuesta) {
         Optional<String> usernameOpt = JwtTokenUtil.extractUsernameFromToken(token);
-
         if (usernameOpt.isPresent()) {
             Optional<Usuario> usuarioOpt = usuarioService.findByUsername(usernameOpt.get());
             if (usuarioOpt.isPresent()) {
@@ -82,16 +99,24 @@ public class RuletaController {
         }
     }
 
-    @GetMapping("/reglas")
-    public ResponseEntity<?> getReglasPDF() throws Exception {
-        try {
-            Path path = Paths.get("src/main/resources/static/reglas-ruleta-americana.pdf");
-            Resource resource = new UrlResource(path.toUri());
-            return ResponseEntity.ok()
-                    .contentType(MediaType.APPLICATION_PDF)
-                    .body(resource);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Fichero no encontrado");
+    @PostMapping("/{id}")
+    public ResponseEntity<?> girarRuleta(@PathVariable String id) {
+        Optional<Ruleta> ruletaOpt = ruletaService.findById(id);
+        if (ruletaOpt.isPresent()) {
+            try {
+                Ruleta ruleta = ruletaService.girarRuleta(ruletaOpt.get());
+                for (Object[] apuesta : ruleta.determinarGanadores()) {
+                    Apostador apostador = (Apostador) apuesta[0];
+                    Integer premio = (int) apuesta[1];
+                    usuarioService.cobrar(apostador.getId(), premio);
+                }
+                return new ResponseEntity<>(ruleta, HttpStatus.OK);
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Error al girar: " + e.getMessage());
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Ruleta no encontrada");
         }
     }
 }
