@@ -46,7 +46,7 @@ public class RuletaController {
         return new ResponseEntity<>(ruletas, HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping("/abiertas")
     public ResponseEntity<List<Ruleta>> getAllRuletasAbiertas() {
         List<Ruleta> ruletas = ruletaService.getAllRuletasAbiertas(true);
         return new ResponseEntity<>(ruletas, HttpStatus.OK);
