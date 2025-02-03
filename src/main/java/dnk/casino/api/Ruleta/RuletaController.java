@@ -1,13 +1,11 @@
 package dnk.casino.api.Ruleta;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +28,7 @@ public class RuletaController {
     @GetMapping("/reglas")
     public ResponseEntity<?> getReglasPDF() throws Exception {
         try {
-            Path path = Paths.get("reglas-ruleta-americana.pdf");
-            Resource resource = new UrlResource(path.toUri());
+            Resource resource = new ClassPathResource("static/reglas-ruleta-americana.pdf");
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_PDF)
                     .body(resource);
