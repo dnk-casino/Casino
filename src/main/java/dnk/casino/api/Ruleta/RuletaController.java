@@ -74,22 +74,28 @@ public class RuletaController {
         if (usernameOpt.isPresent()) {
             Optional<Usuario> usuarioOpt = usuarioService.findByUsername(usernameOpt.get());
             if (usuarioOpt.isPresent()) {
-                Optional<Ruleta> ruletaOpt = ruletaService.findById(id);
-                if (ruletaOpt.isPresent()) {
-                    Ruleta ruleta = ruletaOpt.get();
-                    if (ruleta.isRuletaAbierta()) {
-                        try {
-                            Ruleta result = ruletaService.apostar(ruleta, usuarioOpt.get(), apuesta);
-                            return ResponseEntity.ok(result);
-                        } catch (Exception e) {
-                            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                    .body("Error al apostar: " + e.getMessage());
+                Usuario usuario = usuarioOpt.get();
+                if (usuario.getCoins() >= apuesta.getCantidad()) {
+                    Optional<Ruleta> ruletaOpt = ruletaService.findById(id);
+                    if (ruletaOpt.isPresent()) {
+                        Ruleta ruleta = ruletaOpt.get();
+                        if (ruleta.isRuletaAbierta()) {
+                            try {
+                                Ruleta result = ruletaService.apostar(ruleta, usuario, apuesta);
+                                usuarioService.pagar(usuario.getId(), apuesta.getCantidad());
+                                return ResponseEntity.ok(result);
+                            } catch (Exception e) {
+                                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                        .body("Error al apostar: " + e.getMessage());
+                            }
+                        } else {
+                            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Ruleta cerrada");
                         }
                     } else {
-                        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("Ruleta cerrada");
+                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Ruleta no encontrada");
                     }
                 } else {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Ruleta no encontrada");
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No tienes suficientes monedas");
                 }
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario no encontrado");

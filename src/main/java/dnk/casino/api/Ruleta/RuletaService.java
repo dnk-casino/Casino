@@ -44,6 +44,7 @@ public class RuletaService {
     }
 
     public Ruleta girarRuleta(Ruleta ruleta) {
+        ruleta.setRuletaAbierta(false);
         ruleta.girar();
         return ruletaRepository.save(ruleta);
     }
