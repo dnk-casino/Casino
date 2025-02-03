@@ -30,7 +30,7 @@ public class RuletaController {
     @GetMapping("/reglas")
     public ResponseEntity<?> getReglasPDF() throws Exception {
         try {
-            Path path = Paths.get("src/main/resources/static/reglas-ruleta-americana.pdf");
+            Path path = Paths.get("reglas-ruleta-americana.pdf");
             Resource resource = new UrlResource(path.toUri());
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_PDF)
