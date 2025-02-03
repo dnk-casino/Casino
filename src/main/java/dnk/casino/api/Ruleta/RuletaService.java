@@ -31,7 +31,7 @@ public class RuletaService {
         if (apostador != null) {
             ruleta.eliminarApostador(apostador);
         } else {
-            apostador = new Apostador(usuario.getId(), usuario.getUsername(), ruleta.getId());
+            apostador = new Apostador(usuario.getId(), usuario.getUsername());
         }
         apostador.apostar(apuesta);
         ruleta.addApostador(apostador);
