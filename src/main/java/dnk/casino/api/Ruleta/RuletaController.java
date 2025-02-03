@@ -61,7 +61,7 @@ public class RuletaController {
 
     @PostMapping
     public ResponseEntity<?> crearRuleta() {
-        if (ruletaService.getAllRuletasAbiertas(true).size() <= 5) {
+        if (ruletaService.getAllRuletasAbiertas(true).size() < 5) {
             return new ResponseEntity<>(ruletaService.crearRuleta(), HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>("Ya existen demasiadas ruletas abiertas", HttpStatus.TOO_MANY_REQUESTS);
