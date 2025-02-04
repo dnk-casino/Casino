@@ -15,16 +15,32 @@ import dnk.casino.Users.JwtTokenUtil;
 import dnk.casino.Users.Usuario;
 import dnk.casino.Users.UsuarioService;
 
+/**
+ * Controlador de la API de la ruleta.
+ * 
+ * @author Danikileitor
+ */
 @RestController
 @RequestMapping("/api/ruleta")
 public class RuletaController {
 
+    /**
+     * Servicio de ruletas.
+     */
     @Autowired
     private RuletaService ruletaService;
 
+    /**
+     * Servicio de usuarios.
+     */
     @Autowired
     private UsuarioService usuarioService;
 
+    /**
+     * Obtiene el PDF con las reglas de la ruleta.
+     * 
+     * @return el PDF con las reglas de la ruleta
+     */
     @GetMapping("/reglas")
     public ResponseEntity<?> getReglasPDF() throws Exception {
         try {
@@ -37,18 +53,34 @@ public class RuletaController {
         }
     }
 
+    /**
+     * Obtiene todas las ruletas.
+     * 
+     * @return la lista de ruletas
+     */
     @GetMapping
     public ResponseEntity<List<Ruleta>> getAllRuletas() {
         List<Ruleta> ruletas = ruletaService.getAllRuletas();
         return new ResponseEntity<>(ruletas, HttpStatus.OK);
     }
 
+    /**
+     * Obtiene todas las ruletas abiertas.
+     * 
+     * @return la lista de ruletas abiertas
+     */
     @GetMapping("/abiertas")
     public ResponseEntity<List<Ruleta>> getAllRuletasAbiertas() {
         List<Ruleta> ruletas = ruletaService.getAllRuletasAbiertas(true);
         return new ResponseEntity<>(ruletas, HttpStatus.OK);
     }
 
+    /**
+     * Obtiene una ruleta por su ID.
+     * 
+     * @param id el ID de la ruleta a buscar
+     * @return la ruleta encontrada, o un mensaje de error si no se encuentra
+     */
     @GetMapping("/{id}")
     public ResponseEntity<?> getRuletaById(@PathVariable String id) {
         Optional<Ruleta> ruletaOpt = ruletaService.findById(id);
@@ -59,6 +91,11 @@ public class RuletaController {
         }
     }
 
+    /**
+     * Crea una nueva ruleta.
+     * 
+     * @return la ruleta creada, o un mensaje de error si no se puede crear
+     */
     @PostMapping
     public ResponseEntity<?> crearRuleta() {
         if (ruletaService.getAllRuletasAbiertas(true).size() < 5) {
@@ -68,6 +105,14 @@ public class RuletaController {
         }
     }
 
+    /**
+     * Realiza una apuesta en una ruleta.
+     * 
+     * @param token   el token de autenticación
+     * @param id      el ID de la ruleta en la que se realiza la apuesta
+     * @param apuesta la apuesta a realizar
+     * @return la ruleta actualizada, o un mensaje de error si no se puede apostar
+     */
     @PutMapping("/{id}")
     public ResponseEntity<?> apostar(@RequestHeader("Authorization") String token, @PathVariable String id,
             @RequestBody Apuesta apuesta) {
@@ -106,6 +151,12 @@ public class RuletaController {
         }
     }
 
+    /**
+     * Cierra una ruleta.
+     * 
+     * @param id el ID de la ruleta a cerrar
+     * @return la ruleta cerrada, o un mensaje de error si no se puede cerrar
+     */
     @PatchMapping("/{id}")
     public ResponseEntity<?> cerrarRuleta(@PathVariable String id) {
         Optional<Ruleta> ruletaOpt = ruletaService.findById(id);
@@ -121,6 +172,12 @@ public class RuletaController {
         }
     }
 
+    /**
+     * Gira una ruleta.
+     * 
+     * @param id el ID de la ruleta a girar
+     * @return la ruleta girada, o un mensaje de error si no se puede girar
+     */
     @PostMapping("/{id}")
     public ResponseEntity<?> girarRuleta(@PathVariable String id) {
         Optional<Ruleta> ruletaOpt = ruletaService.findById(id);

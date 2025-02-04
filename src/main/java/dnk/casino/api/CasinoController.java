@@ -22,33 +22,69 @@ import dnk.casino.Users.JwtTokenUtil;
 import dnk.casino.Users.Usuario;
 import dnk.casino.Users.UsuarioService;
 
+/**
+ * Controlador de la aplicación del casino.
+ * 
+ * @author Danikileitor
+ */
 @Controller
 public class CasinoController {
 
+    /**
+     * Servicio de usuarios.
+     */
     @Autowired
     private UsuarioService usuarioService;
 
+    /**
+     * Página de inicio de la aplicación.
+     * 
+     * @return la página de inicio
+     */
     @GetMapping("/")
     public String index() {
         return "index";
     }
 
+    /**
+     * Página de administración de la aplicación.
+     * 
+     * @return la página de administración
+     */
     @GetMapping("/admin")
     public String admin() {
         return "admin";
     }
 
+    /**
+     * Página de la tienda de la aplicación.
+     * 
+     * @return la página de la tienda
+     */
     @GetMapping("/tienda")
     public String tienda() {
         return "tienda";
     }
 
+    /**
+     * Página de restablecimiento de contraseña de la aplicación.
+     * 
+     * @param model modelo de la página
+     * @param token token de restablecimiento de contraseña
+     * @return la página de restablecimiento de contraseña
+     */
     @GetMapping("/restablecer-contrasena")
     public String restablecerContrasena(Model model, @RequestParam(required = false) String token) {
         model.addAttribute("token", token);
         return "restablecer-contrasena";
     }
 
+    /**
+     * Obtiene la cantidad de monedas de un usuario.
+     * 
+     * @param token token de autenticación
+     * @return la cantidad de monedas del usuario
+     */
     @PostMapping(value = "/api/coins", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<Integer> getCoins(@RequestHeader("Authorization") String token) {
@@ -65,6 +101,13 @@ public class CasinoController {
         }
     }
 
+    /**
+     * Actualiza la cantidad de monedas de un usuario.
+     * 
+     * @param token   token de autenticación
+     * @param request solicitud de actualización de monedas
+     * @return la cantidad de monedas actualizada del usuario
+     */
     @PutMapping("/api/coins")
     @ResponseBody
     public ResponseEntity<Integer> updateCoins(@RequestHeader("Authorization") String token,
@@ -89,14 +132,30 @@ public class CasinoController {
         }
     }
 
+    /**
+     * Solicitud de actualización de monedas.
+     */
     public static class CoinUpdateRequest {
+        /**
+         * Cantidad de monedas a agregar o restar.
+         */
         @JsonProperty("delta")
         private int delta;
 
+        /**
+         * Obtiene la cantidad de monedas a agregar o restar.
+         * 
+         * @return la cantidad de monedas
+         */
         public int getDelta() {
             return delta;
         }
 
+        /**
+         * Establece la cantidad de monedas a agregar o restar.
+         * 
+         * @param delta la cantidad de monedas
+         */
         public void setDelta(int delta) {
             this.delta = delta;
         }

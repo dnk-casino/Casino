@@ -6,61 +6,136 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Representa una ruleta.
+ * 
+ * @author Danikileitor
+ */
 @Document(collection = "ruleta")
 public class Ruleta {
+    /**
+     * ID de la ruleta.
+     */
     @Id
     private String id;
+    /**
+     * Número ganador de la ruleta.
+     */
     private int numeroGanador;
+    /**
+     * Lista de apostadores de la ruleta.
+     */
     private List<Apostador> apostadores;
+    /**
+     * Indica si la ruleta está abierta.
+     */
     private boolean ruletaAbierta;
 
-    // Constructor
+    /**
+     * Constructor que inicializa la ruleta con una lista de apostadores vacía y la
+     * ruleta
+     * abierta.
+     */
     public Ruleta() {
         this.apostadores = new ArrayList<>();
         this.ruletaAbierta = true;
     }
 
-    // Getters y Setters
+    /**
+     * Obtiene el ID de la ruleta.
+     * 
+     * @return el ID de la ruleta
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Establece el ID de la ruleta.
+     * 
+     * @param id el ID de la ruleta
+     */
     public void setId(String id) {
         this.id = id;
     }
 
+    /**
+     * Obtiene el número ganador de la ruleta.
+     * 
+     * @return el número ganador de la ruleta
+     */
     public int getNumeroGanador() {
         return numeroGanador;
     }
 
+    /**
+     * Establece el número ganador de la ruleta.
+     * 
+     * @param numeroGanador el número ganador de la ruleta
+     */
     public void setNumeroGanador(int numeroGanador) {
         this.numeroGanador = numeroGanador;
     }
 
+    /**
+     * Obtiene la lista de apostadores de la ruleta.
+     * 
+     * @return la lista de apostadores
+     */
     public List<Apostador> getApostadores() {
         return apostadores;
     }
 
+    /**
+     * Establece la lista de apostadores de la ruleta.
+     * 
+     * @param apostadores la lista de apostadores
+     */
     public void setApostadores(List<Apostador> apostadores) {
         this.apostadores = apostadores;
     }
 
+    /**
+     * Indica si la ruleta está abierta.
+     * 
+     * @return true si la ruleta está abierta, false en caso contrario
+     */
     public boolean isRuletaAbierta() {
         return ruletaAbierta;
     }
 
+    /**
+     * Establece si la ruleta está abierta.
+     * 
+     * @param ruletaAbierta true si la ruleta está abierta, false en caso contrario
+     */
     public void setRuletaAbierta(boolean ruletaAbierta) {
         this.ruletaAbierta = ruletaAbierta;
     }
 
+    /**
+     * Agrega un apostador a la lista de apostadores de la ruleta.
+     * 
+     * @param apostador el apostador a agregar
+     */
     public void addApostador(Apostador apostador) {
         this.apostadores.add(apostador);
     }
 
+    /**
+     * Elimina un apostador de la lista de apostadores de la ruleta.
+     * 
+     * @param apostador el apostador a eliminar
+     */
     public void eliminarApostador(Apostador apostador) {
         this.apostadores.remove(apostador);
     }
 
+    /**
+     * Obtiene el color del número ganador de la ruleta.
+     * 
+     * @return el color del número ganador
+     */
     public String getColorGanador() {
         if (this.numeroGanador == 0) {
             return "verde";
@@ -69,10 +144,20 @@ public class Ruleta {
         }
     }
 
+    /**
+     * Gira la ruleta y establece el número ganador.
+     * 
+     * @return el número ganador
+     */
     public int girar() {
         return this.numeroGanador = (int) (Math.random() * 37);
     }
 
+    /**
+     * Determina los ganadores de la ruleta.
+     * 
+     * @return la lista de ganadores
+     */
     public List<Object[]> determinarGanadores() {
         List<Object[]> ganadores = new ArrayList<>();
         for (Apostador apostador : this.apostadores) {

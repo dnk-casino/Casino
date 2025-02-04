@@ -18,16 +18,33 @@ import dnk.casino.Users.JwtTokenUtil;
 import dnk.casino.Users.Usuario;
 import dnk.casino.Users.UsuarioService;
 
+/**
+ * Controlador de la API de Blackjack.
+ * 
+ * @author Danikileitor
+ */
 @RestController
 @RequestMapping("/api/blackjack")
 public class BlackjackController {
 
+    /**
+     * Servicio de usuarios.
+     */
     @Autowired
     private UsuarioService usuarioService;
 
+    /**
+     * Servicio de juegos de Blackjack.
+     */
     @Autowired
     private JuegoService juegoService;
 
+    /**
+     * Obtiene el número de victorias de un usuario en el juego de Blackjack.
+     * 
+     * @param token el token de autenticación
+     * @return el número de victorias del usuario
+     */
     @PostMapping(value = "/wins", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> getWins(@RequestHeader("Authorization") String token) {
@@ -51,6 +68,11 @@ public class BlackjackController {
         }
     }
 
+    /**
+     * Obtiene el ranking de usuarios en el juego de Blackjack.
+     * 
+     * @return el ranking de usuarios
+     */
     @PostMapping(value = "/ranking", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> getRanking() {
@@ -60,6 +82,13 @@ public class BlackjackController {
         return ResponseEntity.ok(new Ranking(usuarios, usuarioService));
     }
 
+    /**
+     * Crea un nuevo juego de Blackjack para un usuario.
+     * 
+     * @param apuesta la apuesta del juego
+     * @param token   el token de autenticación
+     * @return el juego creado
+     */
     @PostMapping(value = "/crear-juego/{apuesta}")
     public ResponseEntity<?> crearJuego(@PathVariable int apuesta, @RequestHeader("Authorization") String token) {
         Optional<String> usernameOpt = JwtTokenUtil.extractUsernameFromToken(token);
@@ -95,6 +124,13 @@ public class BlackjackController {
         }
     }
 
+    /**
+     * Obtiene un juego de Blackjack por su ID.
+     * 
+     * @param id    el ID del juego
+     * @param token el token de autenticación
+     * @return el juego
+     */
     @PostMapping("/juego/{id}")
     public ResponseEntity<?> getJuego(@PathVariable String id, @RequestHeader("Authorization") String token) {
         Optional<String> usernameOpt = JwtTokenUtil.extractUsernameFromToken(token);
@@ -115,6 +151,12 @@ public class BlackjackController {
         }
     }
 
+    /**
+     * Obtiene el juego de Blackjack activo de un usuario.
+     * 
+     * @param token el token de autenticación
+     * @return el juego activo
+     */
     @PostMapping("/juegoActivo")
     public ResponseEntity<?> getJuegoActivo(@RequestHeader("Authorization") String token) {
         Optional<String> usernameOpt = JwtTokenUtil.extractUsernameFromToken(token);
@@ -135,6 +177,13 @@ public class BlackjackController {
         }
     }
 
+    /**
+     * Pide una carta en un juego de Blackjack.
+     * 
+     * @param id    el ID del juego
+     * @param token el token de autenticación
+     * @return el juego actualizado
+     */
     @PostMapping("/pedir-carta/{id}")
     public ResponseEntity<?> pedirCarta(@PathVariable String id, @RequestHeader("Authorization") String token) {
         Optional<String> usernameOpt = JwtTokenUtil.extractUsernameFromToken(token);
@@ -174,6 +223,13 @@ public class BlackjackController {
         }
     }
 
+    /**
+     * Planta el jugador en un juego de Blackjack.
+     * 
+     * @param id    el ID del juego
+     * @param token el token de autenticación
+     * @return el resultado del juego
+     */
     @PostMapping(value = "/plantarse/{id}")
     public ResponseEntity<?> plantarse(@PathVariable String id, @RequestHeader("Authorization") String token) {
         Optional<String> usernameOpt = JwtTokenUtil.extractUsernameFromToken(token);
