@@ -44,7 +44,7 @@ public class RuletaController {
     @GetMapping("/reglas")
     public ResponseEntity<?> getReglasPDF() throws Exception {
         try {
-            Resource resource = new ClassPathResource("static/reglas-ruleta-americana.pdf");
+            Resource resource = new ClassPathResource("static/reglas-ruleta.pdf");
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_PDF)
                     .body(resource);
