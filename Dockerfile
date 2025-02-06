@@ -1,5 +1,5 @@
 # Usamos una imagen base de Java (en este caso OpenJDK 21)
-FROM openjdk:25-jdk-slim AS build
+FROM openjdk:21-jdk-slim AS build
 
 # Instala Maven manualmente
 RUN apt-get update && apt-get install -y maven
@@ -18,7 +18,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Usamos una imagen más ligera para ejecutar la aplicación
-FROM openjdk:25-jdk-slim
+FROM openjdk:21-jdk-slim
 
 # Establecemos el directorio de trabajo
 WORKDIR /app
