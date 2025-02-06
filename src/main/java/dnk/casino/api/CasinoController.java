@@ -53,7 +53,7 @@ public class CasinoController {
      */
     @GetMapping("/javadoc")
     public String javadoc() {
-        return "redirect:" + System.getenv("SERVER_HOST") + "/javadoc/apidocs";
+        return "redirect:" + System.getenv("SERVER_HOST") + "/javadoc/apidocs/index.html";
     }
 
     /**
