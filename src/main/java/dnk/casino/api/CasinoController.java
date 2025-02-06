@@ -47,6 +47,16 @@ public class CasinoController {
     }
 
     /**
+     * Página del javadoc de la aplicación.
+     * 
+     * @return la página del javadoc
+     */
+    @GetMapping("/javadoc")
+    public String javadoc() {
+        return "redirect:" + System.getenv("SERVER_HOST") + "/javadoc/apidocs";
+    }
+
+    /**
      * Página de administración de la aplicación.
      * 
      * @return la página de administración
