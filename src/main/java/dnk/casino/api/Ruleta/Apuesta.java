@@ -43,6 +43,9 @@ public class Apuesta {
      */
     private Otros otros;
 
+    public Apuesta() {
+    }
+
     /**
      * Constructor que inicializa la apuesta PLENO con un número y una cantidad.
      * 
@@ -70,7 +73,8 @@ public class Apuesta {
     }
 
     /**
-     * Constructor que inicializa la apuesta TRANSVERSAL con tres números y una cantidad.
+     * Constructor que inicializa la apuesta TRANSVERSAL con tres números y una
+     * cantidad.
      * 
      * @param n1       el primer número de la apuesta
      * @param n2       el segundo número de la apuesta
@@ -86,7 +90,8 @@ public class Apuesta {
     }
 
     /**
-     * Constructor que inicializa la apuesta CUADRO con cuatro números y una cantidad.
+     * Constructor que inicializa la apuesta CUADRO con cuatro números y una
+     * cantidad.
      * 
      * @param n1       el primer número de la apuesta
      * @param n2       el segundo número de la apuesta
