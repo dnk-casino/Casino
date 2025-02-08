@@ -11,9 +11,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import dnk.casino.Users.JwtTokenUtil;
 import dnk.casino.Users.Usuario;
 import dnk.casino.Users.UsuarioService;
+import dnk.casino.api.Ruleta.Apuesta.Color;
+import dnk.casino.api.Ruleta.Apuesta.Otros;
 
 /**
  * Controlador de la API de la ruleta.
@@ -115,12 +119,13 @@ public class RuletaController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<?> apostar(@RequestHeader("Authorization") String token, @PathVariable String id,
-            @RequestBody Apuesta apuesta) {
+            @RequestBody ApuestaRequest request) {
         Optional<String> usernameOpt = JwtTokenUtil.extractUsernameFromToken(token);
         if (usernameOpt.isPresent()) {
             Optional<Usuario> usuarioOpt = usuarioService.findByUsername(usernameOpt.get());
             if (usuarioOpt.isPresent()) {
                 Usuario usuario = usuarioOpt.get();
+                Apuesta apuesta = request.toApuesta();
                 if (usuario.getCoins() >= apuesta.getCantidad()) {
                     Optional<Ruleta> ruletaOpt = ruletaService.findById(id);
                     if (ruletaOpt.isPresent()) {
@@ -196,6 +201,64 @@ public class RuletaController {
             }
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Ruleta no encontrada");
+        }
+    }
+
+    public static class ApuestaRequest {
+        @JsonProperty("cantidad")
+        private int cantidad;
+
+        @JsonProperty("tipo")
+        private String tipo;
+
+        @JsonProperty("n1")
+        private int n1;
+
+        public ApuestaRequest(String tipo, int cantidad) {
+            this.tipo = tipo;
+            this.cantidad = cantidad;
+        }
+
+        public int getCantidad() {
+            return cantidad;
+        }
+
+        public void setCantidad(int cantidad) {
+            this.cantidad = cantidad;
+        }
+
+        public String getTipo() {
+            return tipo;
+        }
+
+        public void setTipo(String tipo) {
+            this.tipo = tipo;
+        }
+
+        public int getN1() {
+            return n1;
+        }
+
+        public void setN1(int n1) {
+            this.n1 = n1;
+        }
+
+        public Apuesta toApuesta() {
+            return switch (getTipo()) {
+                case "BAJO" -> new Apuesta(Otros.BAJO, getCantidad());
+                case "ALTO" -> new Apuesta(Otros.ALTO, getCantidad());
+                case "PAR" -> new Apuesta(false, getCantidad());
+                case "IMPAR" -> new Apuesta(true, getCantidad());
+                case "ROJO" -> new Apuesta(Color.ROJO, getCantidad());
+                case "NEGRO" -> new Apuesta(Color.NEGRO, getCantidad());
+                case "DOCENA1" -> new Apuesta(Otros.DOCENA1, getCantidad());
+                case "DOCENA2" -> new Apuesta(Otros.DOCENA2, getCantidad());
+                case "DOCENA3" -> new Apuesta(Otros.DOCENA3, getCantidad());
+                case "COLUMNA1" -> new Apuesta(Otros.COLUMNA1, getCantidad());
+                case "COLUMNA2" -> new Apuesta(Otros.COLUMNA2, getCantidad());
+                case "COLUMNA3" -> new Apuesta(Otros.COLUMNA3, getCantidad());
+                default -> new Apuesta(n1, cantidad);
+            };
         }
     }
 }
