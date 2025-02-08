@@ -46,6 +46,9 @@ public class Apostador {
         this(id, nombre, new ArrayList<>());
     }
 
+    public Apostador() {
+    }
+
     /**
      * Obtiene el ID del apostador.
      * 
