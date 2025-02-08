@@ -208,7 +208,7 @@ public class RuletaController {
         @JsonProperty("cantidad")
         private int cantidad;
 
-        @JsonProperty("tipo")
+        @JsonProperty(value = "tipo", defaultValue = "NUMERO")
         private String tipo;
 
         @JsonProperty("n1")
