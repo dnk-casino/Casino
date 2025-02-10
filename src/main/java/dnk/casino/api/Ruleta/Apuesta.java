@@ -43,6 +43,9 @@ public class Apuesta {
      */
     private Otros otros;
 
+    /**
+     * Constructor vacío.
+     */
     public Apuesta() {
     }
 

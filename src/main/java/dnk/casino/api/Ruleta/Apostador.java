@@ -23,6 +23,12 @@ public class Apostador {
     private List<Apuesta> apuestas;
 
     /**
+     * Constructor vacío.
+     */
+    public Apostador() {
+    }
+
+    /**
      * Constructor que inicializa el apostador con un ID, un nombre y una lista de
      * apuestas.
      * 
@@ -44,9 +50,6 @@ public class Apostador {
      */
     public Apostador(String id, String nombre) {
         this(id, nombre, new ArrayList<>());
-    }
-
-    public Apostador() {
     }
 
     /**

@@ -114,7 +114,7 @@ public class RuletaController {
      * 
      * @param token   el token de autenticación
      * @param id      el ID de la ruleta en la que se realiza la apuesta
-     * @param apuesta la apuesta a realizar
+     * @param request la solicitud de apuesta a realizar
      * @return la ruleta actualizada, o un mensaje de error si no se puede apostar
      */
     @PutMapping("/{id}")
@@ -204,45 +204,97 @@ public class RuletaController {
         }
     }
 
+    /**
+     * Solicitud de apuesta.
+     */
     public static class ApuestaRequest {
+        /**
+         * Cantidad apostada.
+         */
         @JsonProperty("cantidad")
         private int cantidad;
-
+        /**
+         * Tipo de apuesta.
+         */
         @JsonProperty("tipo")
         private String tipo;
-
+        /**
+         * Número 1 de la apuesta.
+         */
         @JsonProperty("n1")
         private int n1;
 
+        /**
+         * Constructor que inicializa la solicitud de apuesta con un tipo y una
+         * cantidad.
+         * 
+         * @param tipo     el tipo de apuesta
+         * @param cantidad la cantidad apostada
+         */
         public ApuestaRequest(String tipo, int cantidad) {
             this.tipo = tipo;
             this.cantidad = cantidad;
         }
 
+        /**
+         * Obtiene la cantidad apostada.
+         * 
+         * @return la cantidad apostada
+         */
         public int getCantidad() {
             return cantidad;
         }
 
+        /**
+         * Establece la cantidad apostada.
+         * 
+         * @param cantidad la cantidad apostada
+         */
         public void setCantidad(int cantidad) {
             this.cantidad = cantidad;
         }
 
+        /**
+         * Obtiene el tipo de apuesta.
+         * 
+         * @return el tipo de apuesta
+         */
         public String getTipo() {
             return tipo;
         }
 
+        /**
+         * Establece el tipo de apuesta.
+         * 
+         * @param tipo el tipo de apuesta
+         */
         public void setTipo(String tipo) {
             this.tipo = tipo;
         }
 
+        /**
+         * Obtiene el número 1 de la apuesta.
+         * 
+         * @return el número 1 de la apuesta
+         */
         public int getN1() {
             return n1;
         }
 
+        /**
+         * Establece el número 1 de la apuesta.
+         * 
+         * @param n1 el número 1 de la apuesta
+         */
         public void setN1(int n1) {
             this.n1 = n1;
         }
 
+        /**
+         * Convierte la solicitud de apuesta en una apuesta.
+         * 
+         * @return la apuesta
+         */
         public Apuesta toApuesta() {
             return switch (getTipo()) {
                 case "BAJO" -> new Apuesta(Otros.BAJO, getCantidad());
