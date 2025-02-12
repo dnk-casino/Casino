@@ -189,6 +189,7 @@ public class RuletaController {
         if (ruletaOpt.isPresent()) {
             try {
                 Ruleta ruleta = ruletaService.girarRuleta(ruletaOpt.get());
+                System.out.println(ruleta.determinarGanadores());
                 for (Object[] apuesta : ruleta.determinarGanadores()) {
                     Apostador apostador = (Apostador) apuesta[0];
                     Integer premio = (int) apuesta[1];
