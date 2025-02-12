@@ -190,11 +190,8 @@ public class RuletaController {
             try {
                 Ruleta ruleta = ruletaService.girarRuleta(ruletaOpt.get());
                 for (Object[] apuesta : ruleta.determinarGanadores()) {
-                    System.out.println(apuesta.toString());
                     Apostador apostador = (Apostador) apuesta[0];
                     Integer premio = (int) apuesta[1];
-                    System.out.println(apostador.toString());
-                    System.out.println(premio);
                     usuarioService.cobrar(apostador.getId(), premio);
                 }
                 return new ResponseEntity<>(ruleta, HttpStatus.OK);
